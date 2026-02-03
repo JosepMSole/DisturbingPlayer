@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DISTURBING PLAYER</title>
+  <link rel="stylesheet" href="assets/player-skin.css" />
+  <script defer src="assets/player-skin.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <div id="skin" class="skin" aria-label="DISTURBING PLAYER">
+
+      <!-- BIG TIME -->
+      <div id="ovTime" class="ov time">00:00</div>
+
+      <!-- TRACK NAME -->
+      <div id="ovTrack" class="ov track" data-text="—">—</div>
+
+      <!-- COUNTER -->
+      <div id="ovCounter" class="ov counter">0:00 / 0:00 · TOTAL 0:00</div>
+
+      <!-- PROGRESS -->
+      <div id="ovProg" class="ov prog" title="Seek">
+        <div id="ovProgFill" class="fill"></div>
+        <div class="scan"></div>
+      </div>
+
+      <!-- WAVEFORM -->
+      <canvas id="ovWave" class="ov wave" width="900" height="340" aria-label="Waveform"></canvas>
+
+      <!-- PLAYLIST -->
+      <div id="ovList" class="ov list" role="listbox" aria-label="Lista de reproducción"></div>
+
+      <!-- VOLUME -->
+      <div id="ovVol" class="ov vol" aria-label="Volumen">
+        <button id="volMute" class="vol-btn" title="Mute">🔊</button>
+        <input id="volSlider" class="vol-slider" type="range" min="0" max="1" step="0.01" value="0.85" />
+      </div>
+
+      <!-- SHUFFLE -->
+      <div id="ovShuffle" class="ov shuffle-label">SHUFFLE</div>
+
+      <!-- PLAY / PAUSE ICON -->
+      <div id="ovPlayIcon" class="ov playicon" aria-hidden="true"></div>
+
+      <!-- HOTSPOTS -->
+      <button id="hitPrev" class="hit" aria-label="Anterior"></button>
+      <button id="hitPlay" class="hit" aria-label="Play/Pause"></button>
+      <button id="hitNext" class="hit" aria-label="Siguiente"></button>
+      <button id="hitShuffle" class="hit" aria-label="Shuffle"></button>
+
+      <!-- VISUAL FX -->
+      <div class="fx scanlines"></div>
+      <div class="fx noise"></div>
+      <div class="fx glitch"></div>
+      <div class="fx leds"></div>
+    </div>
+  </div>
+
+  <audio id="audio" preload="metadata"></audio>
+</body>
+</html>

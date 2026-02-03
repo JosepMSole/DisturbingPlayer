@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DISTURBING PLAYER</title>
+  <script defer src="assets/popup.js"></script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #0b0c10;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    /* === Glitch button ===
+       Image MUST be at: assets/abrirplayer.png
+    */
+    .glitch-btn{
+      --img: url("assets/abrirplayer.png");
+      width: min(92vw, 900px);
+      aspect-ratio: 16 / 9;
+      background-image: var(--img);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-drag: none;
+      position: relative;
+      transform: translateZ(0);
+      filter: drop-shadow(0 18px 60px rgba(0,0,0,.65));
+      outline: none;
+
+      /* constant fast glitch jitter */
+      animation: gJitter 180ms infinite steps(2, end);
+    }
+
+    /* more exaggerated press */
+    .glitch-btn:active{
+      animation: none;
+      transform: translateY(6px) scale(0.92) rotate(-0.25deg);
+      filter: drop-shadow(0 10px 40px rgba(0,0,0,.78));
+    }
+
+    @keyframes gJitter{
+      0%   { transform: translate(0,0); }
+      20%  { transform: translate(1px,-1px); }
+      40%  { transform: translate(-1px,1px); }
+      60%  { transform: translate(2px,0); }
+      80%  { transform: translate(-2px,0); }
+      100% { transform: translate(0,0); }
+    }
+
+    /* RGB split glitch layers */
+    .glitch-btn::before,
+    .glitch-btn::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image: var(--img);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      mix-blend-mode: screen;
+      pointer-events:none;
+    }
+    .glitch-btn::before{
+      opacity: .55;
+      filter: drop-shadow(-2px 0 0 rgba(255,43,43,.55)) drop-shadow(2px 0 0 rgba(0,195,255,.35));
+      animation: gSliceA 260ms infinite steps(2, end);
+    }
+    .glitch-btn::after{
+      opacity: .45;
+      filter: drop-shadow(2px 0 0 rgba(43,255,136,.35)) drop-shadow(-2px 0 0 rgba(0,195,255,.25));
+      background-image:
+        var(--img),
+        linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent);
+      background-size: contain, 40% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-position: center, -40% 0;
+      animation: gSliceB 210ms infinite steps(2,end), scanPass 900ms linear infinite;
+    }
+    @keyframes gSliceA{
+      0%   { clip-path: inset(0 0 85% 0); transform: translate(2px,0); }
+      20%  { clip-path: inset(10% 0 60% 0); transform: translate(-2px,0); }
+      40%  { clip-path: inset(40% 0 35% 0); transform: translate(3px,-1px); }
+      60%  { clip-path: inset(70% 0 10% 0); transform: translate(-3px,1px); }
+      80%  { clip-path: inset(25% 0 55% 0); transform: translate(2px,1px); }
+      100% { clip-path: inset(0 0 85% 0); transform: translate(0,0); }
+    }
+    @keyframes gSliceB{
+      0%   { clip-path: inset(65% 0 15% 0); transform: translate(-2px,0); }
+      20%  { clip-path: inset(0 0 78% 0); transform: translate(2px,1px); }
+      40%  { clip-path: inset(18% 0 58% 0); transform: translate(-3px,0); }
+      60%  { clip-path: inset(52% 0 28% 0); transform: translate(3px,-1px); }
+      80%  { clip-path: inset(78% 0 6% 0); transform: translate(-2px,1px); }
+      100% { clip-path: inset(65% 0 15% 0); transform: translate(0,0); }
+    }
+    @keyframes scanPass{ to{ background-position: center, 140% 0; } }
+
+    .glitch-btn:focus-visible{
+      box-shadow: 0 0 0 2px rgba(43,255,136,.25), 0 0 28px rgba(43,255,136,.18);
+      border-radius: 10px;
+    }
+
+    /* === Popup blocked fallback overlay === */
+    .fallback {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color: rgba(215,255,231,.9);
+    }
+    .fallback .panel {
+      width: min(560px, 92vw);
+      border-radius: 18px;
+      padding: 18px 18px 14px;
+      border: 1px solid rgba(43,255,136,.22);
+      background: rgba(10,12,16,.86);
+      box-shadow: 0 20px 80px rgba(0,0,0,.65);
+    }
+    .fallback .title {
+      font-weight: 900;
+      letter-spacing: .08em;
+      margin-bottom: 10px;
+      color: rgba(43,255,136,.92);
+      text-shadow: 0 0 16px rgba(43,255,136,.12);
+    }
+    .fallback .msg { opacity: .85; line-height: 1.35; margin: 0 0 12px; }
+    .fallback a.btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(43,255,136,.26);
+      background: rgba(43,255,136,.08);
+      color: rgba(215,255,231,.92);
+      text-decoration: none;
+      font-weight: 800;
+    }
+    .fallback a.btn:hover { background: rgba(43,255,136,.14); }
+    .fallback button.close {
+      float: right;
+      border: 0;
+      background: transparent;
+      color: rgba(215,255,231,.75);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      padding: 6px 8px;
+    }
+  </style>
+</head>
+<body>
+  <div id="openPlayerImg" class="glitch-btn" role="button" tabindex="0" aria-label="Abrir reproductor"></div>
+
+  <div id="fallback" class="fallback" role="dialog" aria-modal="true" aria-label="Popup bloqueado">
+    <div class="panel">
+      <button class="close" id="fallbackClose" aria-label="Cerrar">✕</button>
+      <div class="title">POPUP BLOQUEADO</div>
+      <p class="msg">
+        Tu navegador bloqueó la ventana emergente. Puedes abrir el reproductor igualmente aquí:
+      </p>
+      <a class="btn" id="fallbackLink" href="player.html" target="_blank" rel="noopener">
+        ▶ Abrir DISTURBING PLAYER
+      </a>
+    </div>
+  </div>
+</body>
+</html>
